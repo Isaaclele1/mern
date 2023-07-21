@@ -5,8 +5,9 @@ export default function Create() {
  const [form, setForm] = useState({
    name: "",
    position: "",
-   //startTime: "",
-   level: "",
+   startTime: "",
+   endTime: "",
+   PPR: "",
  });
  const navigate = useNavigate();
  
