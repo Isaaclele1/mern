@@ -9,6 +9,7 @@ import RecordList from "./components/recordList";
 import Edit from "./components/edit";
 import Create from "./components/create";
 import OutageMap from "./components/outageMap";
+import DropDown from "./components/dropDown";
  
 const App = () => {
  return (
@@ -19,6 +20,7 @@ const App = () => {
        <Route path="/edit/:id" element={<Edit />} />
        <Route path="/create" element={<Create />} />
        <Route path="/outageMap" element={<OutageMap />} />
+       <Route path="/drop" element={<DropDown />} />
      </Routes>
    </div>
  );

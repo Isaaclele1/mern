@@ -1,8 +1,8 @@
 import outageMapImg from "./Images/Whole_Plant.jpg";
 import React, { useState, component } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import styles from "./projects.module.css";
 import { useEffect } from "react";
+import Select from 'react-select';
 
 //
 export default function OutageMap() {
@@ -12,9 +12,8 @@ export default function OutageMap() {
   const [form, setForm] = useState({
     projectName: "",
   });
-
-
-   // These methods will update the state properties.
+ 
+  // These methods will update the state properties.
  function updateForm(value) {
     return setForm((prev) => {
         return { ...prev, ...value };
@@ -116,6 +115,19 @@ export default function OutageMap() {
   //render the stuff
   return (
     <>
+  {/* Dropdown selection menu */}
+      <Select
+    isMulti
+    name="colors"
+    options={records}
+    getOptionLabel={(option) => option.projectName}
+    getOptionValue={(option) => option._id}
+    className="basic-multi-select"
+    classNamePrefix="select"
+  />
+
+
+  {/* Outage Map */}
     <div className="head-text">
       <TransformWrapper initialScale={1}>
         <TransformComponent
