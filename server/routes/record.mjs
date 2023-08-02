@@ -11,6 +11,12 @@ router.get("/", async (req, res) => {
   res.send(results).status(200);
 });
 
+// get access to unique record values
+router.get("/pprs", async (req, res) => {
+  let collection = await db.collection("records").distinct("PPR");
+  res.send(collection).status(200);
+});
+
 // This section will help you get a single record by id
 router.get("/:id", async (req, res) => {
   let collection = await db.collection("records");
