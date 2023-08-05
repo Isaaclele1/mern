@@ -57,7 +57,7 @@ export default function OutageMap() {
     }
 
     getRecords();
-
+    setRecordsPPRFilter(records); // Sets records options to default on page render
     return;
   }, [records.length]);
 
@@ -130,40 +130,27 @@ export default function OutageMap() {
           );
         }
       }
-      /* compare the selectionOption[val].position to location.name
-      -for each location check if there is an selectedoption that matches
-      - scenario 1:
-      -- user hasnt selected anything 
-      -- array is null 
-      -- if array is blank -> run through code with all locations
-
-      - scenario 2:
-      -- user has selected options
-      -- array has values
-      -- for each location.name check if there is a selectedOption[val].position that matches
-      --- if matches , run through the code below 
-      --- if doesnt match, go to next value of location array
-
-      
-
-
-      */
     });
   }
 
 
   const projectListPPRFilter = (selectedPPR) => {
-    let updatedProjectNameOptions = [];
-    for (let option in records) {
-      if (records[option].PPR === selectedPPR[option].PPR) {
-          updatedProjectNameOptions = records[option].PPR.map(updatedProjectNameOptions)
-          setRecordsPPRFilter(updatedProjectNameOptions);
-      } else {
-        return setRecordsPPRFilter(records);
-      }
-      setSelectedPPR(selectedPPR);
+    let updatedProjectNameOptions = []; // Initiate array to store filtered project name options
+    setSelectedPPR(selectedPPR); // Set the state for the selected PPR object
+
+    if (selectedPPR.length === 0) { // If no PPR is selected then default project list to all projects in 'records'
+      setRecordsPPRFilter(records)
+    } else {
+      updatedProjectNameOptions = records.filter((projects) => { // filter through records.PPR's and selectedPPR.value's return truthy values to array
+          return selectedPPR.some((person) => {
+              return person.value === projects.PPR; // We use .some so we can also iterate through the SelectedPPR options
+          })   
+      })
+      setRecordsPPRFilter(updatedProjectNameOptions); // Lastly set the project list to the new filtered options
     }
   }
+    
+  
 
   //Create an array of selected PPRs this would be equal to PPRChoice
   //Lets the dropdown of Project choices only contain options where the PPR is equal to that of PPRChoice
@@ -177,37 +164,35 @@ export default function OutageMap() {
     console.log(`Option selected:`, selectedOption);
   };
 
-  const handlePPRChange = (selectedPPR) => {
-    setSelectedPPR(selectedPPR);
-    projectListPPRFilter(selectedPPR);
-    console.log(`Option selected:`, selectedPPR);
-  };
-
   //render the stuff
   return (
     <>
+    <div className="d-flex flex-row justify-content-left pl-5 gap-5">
+      <div style = {{width: '25%'}}>
+        <Select
+          isMulti
+          name="colors"
+          options={uniquePPRs.map((t) => ({ value: t, label: t }))}
+          onChange={projectListPPRFilter}
+          className="basic-multi-select"
+          classNamePrefix="select"
+        />
+      </div>
 
-      <Select
-        isMulti
-        name="colors"
-        options={uniquePPRs.map((t) => ({ value: t, label: t }))}
-        onChange={projectListPPRFilter}
-        className="basic-multi-select"
-        classNamePrefix="select"
-      />
 
-      <Select
-        isMulti
-        name="colors"
-        options={recordsPPRFilter}
-        getOptionLabel={(option) => option.projectName}
-        getOptionValue={(option) => option._id}
-        onChange={handleChange}
-        className="basic-multi-select"
-        classNamePrefix="select"
-      />
-
-        {}
+      <div style = {{width: '40%'}}>
+        <Select
+          isMulti
+          name="colors"
+          options={recordsPPRFilter}
+          getOptionLabel={(option) => option.projectName}
+          getOptionValue={(option) => option._id}
+          onChange={handleChange}
+          className="basic-multi-select"
+          classNamePrefix="select"
+        />
+      </div>
+    </div>
 
       <div className="head-text">
         <TransformWrapper initialScale={1}>
